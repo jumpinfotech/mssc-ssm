@@ -10,31 +10,36 @@ import org.springframework.statemachine.config.StateMachineFactory;
 
 import java.util.UUID;
 
-@SpringBootTest
+@SpringBootTest // use SpringBoot context 
 class StateMachineConfigTest {
 
-    @Autowired
-    StateMachineFactory<PaymentState, PaymentEvent> factory;
+    @Autowired // tell SpringBoot to inject that
+    StateMachineFactory<PaymentState, PaymentEvent> factory; // intelliJ isn't picking up the context for the StateMachine, factory is underlined
 
-    @Test
+    @Test // intelliJ>Generate>Test Method
     void testNewStateMachine() {
-        StateMachine<PaymentState, PaymentEvent> sm = factory.getStateMachine(UUID.randomUUID());
+        //  id=randomUUID maybe optional
+        StateMachine<PaymentState, PaymentEvent> sm = factory.getStateMachine(UUID.randomUUID()); 
 
-        sm.start();
+        sm.start();//  the state machine "is running", you can set some things, but when you start it that may trigger action.????
 
-        System.out.println(sm.getState().toString());
+        //  state initialises as NEW
+        System.out.println(sm.getState().toString());  
 
         sm.sendEvent(PaymentEvent.PRE_AUTHORIZE);
 
-        System.out.println(sm.getState().toString());
+        //  state shouldn't transition, stays NEW
+        System.out.println(sm.getState().toString()); 
 
         sm.sendEvent(PaymentEvent.PRE_AUTH_APPROVED);
 
-        System.out.println(sm.getState().toString());
+        //  state should transition to PRE_AUTH, console output> ObjectState [getIds()=[PRE_AUTH],...
+        System.out.println(sm.getState().toString()); 
 
         sm.sendEvent(PaymentEvent.PRE_AUTH_DECLINED);
 
-        System.out.println(sm.getState().toString());
+        //  state stays PRE_AUTH > as we haven't defined a PRE_AUTH_DECLINED event to transition a PRE_AUTH state, event is ignored>we get no error
+        System.out.println(sm.getState().toString()); 
 
     }
 }

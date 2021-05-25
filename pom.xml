@@ -28,6 +28,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--  dependency needed for Spring State Machine> he thinks it wasn't available within the parent POM>could change -->
         <dependency>
             <groupId>org.springframework.statemachine</groupId>
             <artifactId>spring-statemachine-core</artifactId>
@@ -50,6 +51,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--  JUnit 5 is used-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

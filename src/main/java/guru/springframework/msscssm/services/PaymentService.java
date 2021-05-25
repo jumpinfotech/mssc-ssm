@@ -8,6 +8,8 @@ import org.springframework.statemachine.StateMachine;
 /**
  * Created by jt on 2019-08-10.
  */
+//  used to work with payments + utilize the state machine
+//  we get events + paymentId then we persist that event
 public interface PaymentService {
 
     Payment newPayment(Payment payment);

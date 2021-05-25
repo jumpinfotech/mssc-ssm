@@ -15,13 +15,15 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity //standard Java API
 public class Payment {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    // tells Hibernate to create a varchar (the enumeration name), 
+    // JT believes without this you'll get the enumeration as a number
     @Enumerated(EnumType.STRING)
     private PaymentState state;
 

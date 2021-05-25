@@ -69,6 +69,8 @@ local.properties
 ######################
 /log/
 */target/**
+# Peter>without this my target directory was shown in my git window
+/target
 ######################
 # Gradle
 ######################
