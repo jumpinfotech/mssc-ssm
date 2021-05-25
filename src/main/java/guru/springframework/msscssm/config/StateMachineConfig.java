@@ -21,14 +21,25 @@ import java.util.EnumSet;
  * Created by jt on 2019-07-23.
  */
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor // added
 @EnableStateMachineFactory
 @Configuration
 public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentState, PaymentEvent> {
 
+    // 3 original methods added as Spring Beans.
+    // We have Action's, we are not autowiring by Type,
+    // the property name e.g. preAuthAction matches the class name PreAuthAction.java
+    // spring can autowire this property>advanced spring configuration,
+    // if I renamed it to something other than the class name then I'd have to specify
+    // a constructor and give it some type of Qualifier so spring would know which
+    // instance I want, by default spring autowires by type + if multiple types exist
+    // spring will try to match the property name to the bean name 
+    // e.g. preAuthAction = PreAuthAction.java + authAction = AuthAction.java
     private final Action<PaymentState, PaymentEvent> preAuthAction;
     private final Action<PaymentState, PaymentEvent> authAction;
     private final Guard<PaymentState, PaymentEvent> paymentIdGuard;
+    
+    // notification actions
     private final Action<PaymentState, PaymentEvent> preAuthApprovedAction;
     private final Action<PaymentState, PaymentEvent> preAuthDeclinedAction;
     private final Action<PaymentState, PaymentEvent> authApprovedAction;
@@ -50,20 +61,22 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
                     .action(preAuthAction).guard(paymentIdGuard)
                 .and()
                 .withExternal().source(PaymentState.NEW).target(PaymentState.PRE_AUTH).event(PaymentEvent.PRE_AUTH_APPROVED)
-                    .action(preAuthApprovedAction)
+                    .action(preAuthApprovedAction) // action added
                 .and()
                 .withExternal().source(PaymentState.NEW).target(PaymentState.PRE_AUTH_ERROR).event(PaymentEvent.PRE_AUTH_DECLINED)
-                    .action(preAuthDeclinedAction)
+                    .action(preAuthDeclinedAction) // action added
                 //preauth to auth
                 .and()
                 .withExternal().source(PaymentState.PRE_AUTH).target(PaymentState.PRE_AUTH).event(PaymentEvent.AUTHORIZE)
                     .action(authAction)
                 .and()
                 .withExternal().source(PaymentState.PRE_AUTH).target(PaymentState.AUTH).event(PaymentEvent.AUTH_APPROVED)
-                    .action(authApprovedAction)
+                    .action(authApprovedAction) // action added
                 .and()
                 .withExternal().source(PaymentState.PRE_AUTH).target(PaymentState.AUTH_ERROR).event(PaymentEvent.AUTH_DECLINED)
-                    .action(authDeclinedAction);
+                    .action(authDeclinedAction); // action added
+                // authDeclinedAction may need to do lots of work, 
+                // the authDeclinedAction is in 1 self contained class>helps to stop this class becoming huge
     }
 
     @Override
@@ -79,12 +92,20 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
                 .listener(adapter);
     }
 
+
+//  Assignment to implement notification actions, here we commented out the original methods we used for the actions, 
+//  as we'll implement these as beans.
+//  Gives a realistic example how a state machine would be used in a microservice environment,
+//  were the state machine is transitioning, our business logic is componentized.
+    
+// implemented now as a class msscssm\config\guards\PaymentIdGuard.java
 //    public Guard<PaymentState, PaymentEvent> paymentIdGuard(){
 //        return context -> {
 //            return context.getMessageHeader(PaymentServiceImpl.PAYMENT_ID_HEADER) != null;
 //        };
 //    }
 
+// implemented now as a class msscssm\config\actions\PreAuthAction.java    
 //    public Action<PaymentState, PaymentEvent> preAuthAction(){
 //        return context -> {
 //            System.out.println("PreAuth was called!!!");
@@ -104,6 +125,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
 //        };
 //    }
 
+// implemented now as a class msscssm\config\actions\AuthAction.java    
 //    public Action<PaymentState, PaymentEvent> authAction(){
 //        return context -> {
 //            System.out.println("Auth was called!!!");

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by jt on 2019-08-18.
  */
+// this replaces the paymentIdGuard() method in msscssm\config\StateMachineConfig.java
 @Component
 public class PaymentIdGuard implements Guard<PaymentState, PaymentEvent> {
 

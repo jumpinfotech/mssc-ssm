@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PreAuthApprovedAction implements Action<PaymentState, PaymentEvent> {
+    
+    // simple, just implements the execute method
     @Override
     public void execute(StateContext<PaymentState, PaymentEvent> context) {
         System.out.println("Sending Notification of PreAuth Approved");

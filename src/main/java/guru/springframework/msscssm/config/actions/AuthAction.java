@@ -13,11 +13,15 @@ import java.util.Random;
 /**
  * Created by jt on 2019-08-18.
  */
-@Component
+// this replaces the authAction() method in msscssm\config\StateMachineConfig.java
+// @Component I'm not specifying a name, the bean name inside the context is going
+// to become the name of the class, with a leading lower case character i.e. authAction    
+@Component 
 public class AuthAction implements Action<PaymentState, PaymentEvent> {
 
     @Override
     public void execute(StateContext<PaymentState, PaymentEvent> context) {
+        // copied + pasted from StateMachineConfig.java>authAction()
         System.out.println("Auth was called!!!");
 
         if (new Random().nextInt(10) < 8) {

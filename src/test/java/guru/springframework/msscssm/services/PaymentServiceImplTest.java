@@ -50,6 +50,11 @@ class PaymentServiceImplTest {
     }
 
 
+    // in the console for the test we can now also see
+    // ...
+    // Sending Notification of PreAuth Approved
+    // ...
+    // Sending Notification of Auth APPROVED
     @Transactional
     @RepeatedTest(10)
     void testAuth() {

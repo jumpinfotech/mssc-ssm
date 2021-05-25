@@ -13,11 +13,13 @@ import java.util.Random;
 /**
  * Created by jt on 2019-08-18.
  */
+// this replaces the preAuthAction() method in msscssm\config\StateMachineConfig.java
 @Component
 public class PreAuthAction implements Action<PaymentState, PaymentEvent>{
 
     @Override
     public void execute(StateContext<PaymentState, PaymentEvent> context) {
+        // copied + pasted from StateMachineConfig.java>preAuthAction()
         System.out.println("PreAuth was called!!!");
 
         if (new Random().nextInt(10) < 8) {
